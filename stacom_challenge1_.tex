@@ -1,6 +1,4 @@
-
 \documentclass{llncs}
-%
 
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -21,25 +19,25 @@
 }
 \maketitle              % typeset the title of the contribution
 \begin{abstract}
-Understanding myocardial remodelling, and developing tools for its accurate quantification is fundamental to improving the diagnosis and treatment of myocardial infarction patients. Clinically used measurements such as ejection fraction are not always distinctive and provide only part of the relevant information.  Here we describe a method for the classification of myocardial infarction from 3D diastolic and systolic left ventricle shapes, represented by point sets. Classification features included global geometric descriptors as well as shape and thickness descriptors. A random forest was used for classification. Results from cross validation show an accuracy of 92.5\% (leave-one-out) and 91.5\% (5-fold), suggesting that advanced shape and thickness metrics provide information beyond standard clinical descriptors.
+Understanding myocardial remodelling, and developing tools for its accurate quantification is fundamental to improving the diagnosis and treatment of myocardial infarction patients. Clinically used measurements such as ejection fraction are not always distinctive and provide only part of the relevant information.  Here we describe a method for the classification of myocardial infarction from 3D end-diastole (ED) and end-systole (ES) left ventricle shapes, represented by point sets. Classification features included global geometric descriptors as well as shape and thickness descriptors. A random forest was used for classification. Results from cross validation show an accuracy of 92.5\% (leave-one-out) and 91.5\% (5-fold), suggesting that advanced shape and thickness metrics provide information beyond standard clinical descriptors.
 \keywords{statistical shape model, random forest, left ventricle, Myocardial infarction}
 \end{abstract}
 %
 \section{Introduction}
-The damage resulting from myocardial infarction can cause the heart to remodel, which can have a negative effect on its function \cite{Sutton2000}. Remodelling of the left ventricle is particularly significant because of its potential life-threatening effects. 
-Global measurements of function, such as left ventricle ejection fraction, are widely used in the clinic to assess cardiac function. Statistical shape models \cite{Cootes1992} have been applied to the heart and have the potential to provide further information \cite{Lewandowski2012,Young2009,Lorenz2006}, improving our understanding of shape changes in pathology and suggesting novel ways to quantify risk and patient-specific treatment options. In particular, myocardial infarction can cause thinning and a decrease in thickness change over the cardiac cycle, in the area of the scar, while hypertrophy can occur in other areas as they adapt to compensate \cite{Sutton2000}. Shape-based metrics, or features, need to be developed to quantify these changes, e.g. from segmented images. Machine learning methods have been applied to medical images \cite{Mantilla2013,Wernick2010} and could use these features to classify infarction in left ventricles. Breiman's decision tree ensembles, known as \emph{random forests} \cite{Breiman2001} have been shown to provide excellent classification results when many features are available. Here we use a large collection of left ventricle shape features to build random forests, and classify them depending on whether they correspond to hearts with a prior myocardial infarction.
+The damage resulting from myocardial infarction can cause the heart to remodel, which can negatively affect its function \cite{Sutton2000}. Remodelling of the left ventricle is particularly significant because of its potential life-threatening effects. 
+Global measurements of function, such as left ventricle ejection fraction, are widely used in the clinic to assess cardiac function. Statistical shape models \cite{Cootes1992} have been applied to the heart and could provide further information \cite{Lewandowski2012,Young2009,Lorenz2006}, improving our understanding of shape changes in pathology and suggesting novel ways to quantify risk and patient-specific treatment options. In particular, myocardial infarction can cause thinning and a decrease in thickness change over the cardiac cycle, in the area of the scar, while hypertrophy can occur in other areas as they adapt to compensate \cite{Sutton2000}. Shape-based metrics, or features, need to be developed to quantify these changes, e.g. from segmented images. Machine learning methods have been applied to medical images \cite{Mantilla2013,Wernick2010} and could use these features to classify infarction in left ventricles. Breiman's decision tree ensembles, known as \emph{random forests} \cite{Breiman2001} have been shown to provide excellent classification results when many features are available. Here we use a large collection of left ventricle shape features to build random forests, and classify them depending on whether they correspond to hearts with a prior myocardial infarction.
 
 We present this work as an entry to a left ventricle statistical shape modelling challenge organised by the MICCAI 2015 Statistical Atlases and Computational Modeling of the heart (STACOM) workshop.
 
 
 \section{Materials and Methods}
 	\subsection{The data.}
-The challenge organisers provided a dataset of 400 3D left ventricle shapes, including point coordinates and their connectivity for forming triangular meshes. Each case included end-diastolic (ED) and end-systolic (ES) shapes, each consisting of 1089 points, which had been fitted to magnetic resonance images as described in \cite{Young2000}, with a correction for potential bias from different acquisition protocols \cite{Medrano-Gracia2013}. For each of the cases, the index of points approximately in the middle of the septum was also provided. Of the 400 shapes, 200 were labelled for use as training data. Of the training data, 100 were cases with myocardial infarction, from the DETERMINE trial \cite{Kadish2009}. The remaining 100 training shapes were from the MESA study \cite{Bild2002} and did not show symptoms of myocardial infarction. From now on in this report, these two studies will be referred to as DETERMINE and MESA, respectively. The dataset contained a further testing set containing 200 unlabelled cases, for which classification results were submitted as an entry to the challenge. Before the submission date for the challenge the organisers provided a replacement for one of the shapes that had been deemed to be incorrect. 
+The challenge organisers provided a dataset of 400 3D left ventricle shapes, including point coordinates and their connectivity for forming triangular meshes. Each case included ED and ES shapes, each consisting of 1089 points, which had been fitted to magnetic resonance images as described in \cite{Young2000}, with a correction for potential bias from different acquisition protocols \cite{Medrano-Gracia2013}. The indices of the points approximately in the middle of the septum were also provided. Of the 400 shapes, 200 were labelled for use as training data. Of the training data, 100 were cases with myocardial infarction, from the DETERMINE trial \cite{Kadish2009}. The remaining 100 training shapes were from the MESA study \cite{Bild2002} and did not show symptoms of myocardial infarction. From now on in this report, these two studies will be referred to as DETERMINE and MESA, respectively. The dataset contained a further testing set containing 200 unlabelled cases, which were classified as an entry to the challenge. Before the submission date for the challenge the organisers provided a replacement for one of the shapes that had been deemed incorrect. 
 	\subsection{Feature computation.}
-	The computations in this report were performed using \emph{\mbox{MATLAB}} and functions from  \emph{The Visualization Tookit} (VTK) \cite{Schroeder2006} for mesh processing. We calculated a combination of standard clinical features and more advanced statistical model metrics, as listed in Table \ref{table:featurelist}.
+	The computations in this report were performed using \emph{\mbox{MATLAB}} and functions from  \emph{The Visualization Tookit} (VTK) \cite{Schroeder2006visualization} for mesh processing. We calculated a combination of standard clinical features and more advanced statistical model metrics, as listed in Table \ref{table:featurelist}.
 	\subsubsection{Volumes and ejection fraction.}
-We calculated the volumes contained by the epicardium and endocardium surfaces, for each subject, at the ED and ES stages. For this purpose, we closed each mesh by adding a node located at the centroid of the opening at the left ventricle base, which we connected to the nodes on the edge of this opening to form triangles. These volumes were used to compute ejection fractions. 
-\subsubsection{Sphericity.}Remodeling has been shown to produced increased sphericity of the left ventricle \cite{Sutton2000}. We  computed the sphericity \cite{Wadell1933} of the endocardium and epicardium at ED and ES, using the definition in Eq. \ref{eq:sphericity}, where V and A are the volume and surface area of a 3D shape, respectively. 
+We calculated the volumes contained by the epicardium and endocardium surfaces, for each subject, at ED and ES. For this purpose, we closed each mesh by adding a node located at the centroid of the opening at the left ventricle base, which we connected to the nodes on the edge of this opening to form triangles. These volumes were used to compute ejection fractions. 
+\subsubsection{Sphericity.}Remodeling has been shown to produced increased sphericity of the left ventricle \cite{Sutton2000}. We  computed the sphericity \cite{Wadell1933} of the endocardium and epicardium at ED and ES, using Eq. \ref{eq:sphericity}, where V and A are the volume and surface area of a 3D shape, respectively. 
 \begin{equation} \label{eq:sphericity}
  Sphericity = \cfrac{\pi^{1/3}(6V)^{2/3}}{A} 
 \end{equation}
@@ -55,9 +53,16 @@ A point distribution model was built in a similar way to previous publications \
 We calculated the myocardium thicknesses for all the cases, at ES and ED. This was done by computing the distance between each node on the epicardium mesh and the closest point (not necessarily a node) on the endocardium surface. The shapes were divided into three segments, named: apical, middle and basal. Each segment consisted of an equal number of nodes in the long axis direction. Thickness statistics were computed for the whole left ventricle and each of these sections.
 \subsubsection{Modes of myocardium thickness variation.}
 We also computed the parameters of the modes of thickness variation. Modes of thickness were found in a similar way to those of shape (\emph{i.e.} using Eq. \ref{eq:shape_model}), but by applying PCA only on the MESA shapes, with the aim of making the model independent from the location of the scar within the ventricle, as well as the variability of the remodelling responses.
-		\begin{table}
+	
+	\subsection{Classification}
+	\label{method:classification}
+We applied a threshold to the ejection fractions to find a baseline success rate. The results of this are shown in Fig. \ref{fig:EFs}. We investigated potential improvements on this rate by including the rest of the features mentioned in Table \ref{table:featurelist} and building a random forest, using the training data. Random forests are ensembles of many decision trees built iteratively. To produce each tree, a subset of the cases, of predefined size, is randomly chosen (\emph{i.e.} 'bagged') to be used for training. At an initial node, a subset of the features is randomly chosen and the feature that provides the optimal split is identified and used to divide the training data into two branches, to two new nodes. In our study, branches were produced until each new node only contained one class. Unused cases (\emph{i.e.} 'out-of-bag' cases), were passed down each completed tree, and the most common prediction for each case was compared with the true label. Classification error was computed as the percentage of misclassified 'out-of-bag' cases. The error was cross-validated using 'k-fold' techniques, where the training set was divided into k equally sized partitions, with one partition treated as a test set. We used k = 5 and k = 200. In this report the use of k = 200 will be referred to as a 'leave-one-out' method. We used 300 trees in the ensemble, as this was sufficient for achieving a relatively settled error. However, fewer trees could possibly be used without significantly increasing the overall error. The 'out-of-bag' importance of each feature for successful classification was found individually, by randomly mixing the feature values, before passing the 'out-of-bag' cases down the tree again. The importance of each feature was the average increase in classification error caused by the mixing, for the whole ensemble, divided by the the standard deviation.
+After observing the importances of the first 100 modes for the two models, parameters for the first 15 modes were chosen as features to build the final random forest. The features in Table \ref{table:featurelist} were also used to classify the test data as an entry to the challenge. The parameters for shape and thickness variation in the test shapes were produced by fitting the test shapes to the training data models.
+
+\begin{table}
+
 		\begin{center}
-		
+	
 		\begin{tabular}{l|l|}
 \textbf{Index} \space & \multicolumn{1}{l}{\textbf{Feature}}
 \\
@@ -106,110 +111,95 @@ We also computed the parameters of the modes of thickness variation. Modes of th
 		\label{table:featurelist}
 		\end{center}
 		\end{table}
-		
-	\subsection{Classification}
-	\label{method:classification}
-	
-	
-We applied a threshold to the ejection fractions to find a baseline success rate. The results of this are shown in Fig. \ref{fig:EFs}. We investigated potential improvements on this rate by including the rest of the features mentioned in Table \ref{table:featurelist} and building a random forest, using the training data. Random forests are ensembles of many decision trees built iteratively as briefly described next. To produce each tree, a subset of the cases, of predefined size, is randomly chosen (\emph{i.e.} 'bagged') to be used for training. At an initial node, a subset of the features is randomly chosen and the feature that provides the optimal split is identified and used to divide the training data into two branches, to two new nodes. In our study, branches were produced until each new node only contained one class. The cases that had not been used (\emph{i.e.} 'out-of-bag' cases), were passed down each completed tree, and the most common prediction for each case was compared with the true label. Classification error was computed as the percentage of misclassified 'out-of-bag' cases. The error was cross-validated using 'k-fold' techniques, where the training set was divided into k equally sized partitions and classified, k times. We used k = 5 and k = 200. In this report the use of k = 200 will be referred to as a 'leave-one-out' method. We used 300 trees in the ensemble, as this was sufficient for achieving a relatively settled error. However, fewer trees could possibly be used without significantly increasing the overall error. The 'out-of-bag' importance of each feature for successful classification was found individually, by randomly mixing the feature values, before passing the 'out-of-bag' cases down the tree again. The importance of each feature was the average increase in classification error caused by the mixing, for the whole ensemble, divided by the the standard deviation.
-After observing the importances of the first 100 modes for the two models, parameters for the first 15 modes were chosen as features to build the final random forest. The features in Table \ref{table:featurelist} were also used to classify the test data as an entry to the challenge. The parameters for shape and thickness variation in the test shapes were produced by fitting the test shapes to the training data models.
 
 \section{Results}
 	\subsection{Classification}
-Figure \ref{fig:Ejectionfractionhistograms} demonstrates the split between the ejection fraction of the two classes. Figure \ref{fig:sensitivity_versus_specificity_EF} shows the cross-validated (leave-one-out) sensitivity and specificity for the ejection fractions. Two different thresholds provided the optimum accuracy of 87\%. Figure \ref{fig:random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys} shows the 'out-of-bag' importance (described in section  \ref{method:classification}) of the first 100 modes of the shape and thickness models for successful classification. Large differences in importance were found between the first mode and the rest, for thickness, and between the first two modes and the rest for shape. Figure \ref{fig:random_forest_feature_importance__all_72__dia_sys} shows the importances of the features in Table \ref{table:featurelist}. The addition of other features altered the relative importance of the modes in the shape and thickness models, compared with the baseline error obtained using the optimal threshold on ejection fraction. Shape mode 13 and thickness mode 7 became the most important of their respective models. Figure    \ref{fig:classification_error__5kfold_LOO__all_72_dia_sys} shows the cross validated classification error. Figure \ref{fig:visualise_shapes} shows the variation from shape mode 13, for ED and ES over $\pm$3 $\mathrm{std}$. A variation in thickness can been seen at the diastolic apex. At systole, the mode describes mostly changes in endocardium curvature, particularly opposite the middle of the septum.
+Figure \ref{fig:Ejectionfractionhistograms} demonstrates the split between the ejection fractions of the two classes. Figure \ref{fig:sensitivity_versus_specificity_EF} shows the cross-validated (leave-one-out) sensitivity and specificity for the ejection fractions. Two different thresholds provided the optimum accuracy of 87\%. 
+ \ref{fig:random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys} shows the 'out-of-bag' importance (described in section  \ref{method:classification}) of the first 100 modes of the shape and thickness models for successful classification. Large differences in importance were found between the first mode and the rest, for thickness, and between the first two modes and the rest for shape. Figure \ref{fig:random_forest_feature_importance__all_72__dia_sys} shows the importances of the features in Table \ref{table:featurelist}. The addition of other features altered the relative importance of the modes in the shape and thickness models, compared with the baseline error obtained using the optimal threshold on ejection fraction. Shape mode 13 and thickness mode 7 became the most important of their respective models. Figure    \ref{fig:classification_error__5kfold_LOO__all_72_dia_sys} shows the cross validated classification error. Figure \ref{fig:visualise_shapes} shows the variation from shape mode 13, for ED and ES over $\pm$3 $\mathrm{std}$. A variation in thickness can been seen at the diastolic apex. At systole, the mode describes mostly changes in endocardium curvature, particularly opposite the middle of the septum.
+		
 		\begin{figure}[]
 		
 \begin{center} 
-\subfigure[]{\includegraphics[width=0.45\textwidth]{Ejection_fraction_histograms.eps}
+\subfigure[]{\includegraphics[width=0.26\textheight]{Ejection_fraction_histograms.eps}
  \label{fig:Ejectionfractionhistograms}}
 \!
-\subfigure[]{\includegraphics[width=0.45\textwidth]{sensitivity_versus_specificity_EF___leave_one_out.eps} \label{fig:sensitivity_versus_specificity_EF}}
+\subfigure[]{\includegraphics[width=0.26\textheight]{sensitivity_versus_specificity_EF___leave_one_out.eps} \label{fig:sensitivity_versus_specificity_EF}}
 \caption{ \ref{fig:Ejectionfractionhistograms} Comparing the ejection fractions of the DETERMINE and MESA cases \ref{fig:sensitivity_versus_specificity_EF} Cross-validated (leave-one-out) ejection fraction specificity and sensitivity. Yellow stars mark the sensitivity and specificity values for the optimum accuracy of 87\%.}
 \label{fig:EFs}
 \end{center}    
+
 		\end{figure}
- \vspace{-0.3in}
- 		  
-		%\paragraph{Modes of shape and thickness variation.}
 
 		\begin{figure}[]
 		\begin{center}
 		
-		\includegraphics[width=0.9\textwidth]{random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys.eps}
+		\includegraphics[height = 0.32\textwidth]{random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys.eps}
 	\caption{Importance of the first 100 modes of variation of the two models.}	
 \label{fig:random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys}			\end{center}
 		\end{figure}
+	
+
+		
+		
+		\begin{figure}[]
+		\begin{center}
+		
+		\includegraphics[height = 0.32\textwidth]{random_forest_feature_importance__all_72_line_plot__dia_sys.eps}
+		
+\caption{Random forest importance of all the features specified in Table \ref{table:featurelist}. The colours group the features according to Table \ref{table:featurelist}. (yellow = shape model parameters, magenta = global thickness statistics, cyan = segment thickness variances, red = segment thickness means, blue circles = volumes, blue triangles = log volumes, black = thickness model parameters).}
+\label{fig:random_forest_feature_importance__all_72__dia_sys}		\end{center}
+	\end{figure}
 	
 	\begin{figure}[]
 	\begin{center}
 	
 
-		\includegraphics[width=1\textwidth]{classification_error__5kfold_LOO__all_72_dia_sys.eps}
+		\includegraphics[height = 0.32\textwidth]{classification_error__5kfold_LOO__all_72_dia_sys.eps}
 \caption{Cross-validated (5-fold and leave-one-out) classification error for the random forest built using all the features listed in Table \ref{table:featurelist}}.	
 \label{fig:classification_error__5kfold_LOO__all_72_dia_sys}			\end{center}
 		\end{figure}
-		
-		
-		\begin{figure}[]
-		\begin{center}
-		
-		\subfigure[]
-		{
-		\includegraphics[width=0.9\textwidth, height = 0.5\textwidth]{random_forest_feature_importance__all_72__dia_sys.eps}
-		}
-\caption{Random forest importance of all the features specified in Table \ref{table:featurelist}. The colours group the features according to Table \ref{table:featurelist}. (yellow = shape model parameters, magenta = global thickness statistics, cyan = segment thickness variances, red = segment thickness means, blue circles = volumes, blue triangles = log volumes, black = thickness model parameters).}
-\label{fig:random_forest_feature_importance__all_72__dia_sys}		\end{center}
-	\end{figure}
 		
 	\begin{figure}[]	
 	\!		
 \begin{center}   
 \subfigure[end-diastole mode 13: -3 $\mathrm{std}$, mean, +3$\mathrm{std}$]
 {
-\includegraphics[width=0.15\textwidth]{diastole_mode13_std-3.png} 
+\includegraphics[width=0.13\textwidth]{diastole_mode13_std-3.png} 
 
-\includegraphics[width=0.15\textwidth]
+\includegraphics[width=0.13\textwidth]
 {diastole_mean.png}
 
-\includegraphics[width=0.15\textwidth]
+\includegraphics[width=0.13\textwidth]
 {diastole_mode13_std3.png} \label{fig:diastole_mode1_std3}
 }
-\!
+\qquad
 \subfigure[end-systole mode 13: -3$\mathrm{std}$, mean, +3$\mathrm{std}$]{
-\includegraphics[width=0.15\textwidth]
+\includegraphics[width=0.13\textwidth]
 {systole_mode13_std-3.png}
 \label{fig:diastole_mode14_std-3}
 
-\includegraphics[width=0.15\textwidth]{systole_mean.png} \label{fig:systole_mean}
+\includegraphics[width=0.13\textwidth]{systole_mean.png} \label{fig:systole_mean}
 
-\includegraphics[width=0.15\textwidth]
+\includegraphics[width=0.13\textwidth]
 {systole_mode13_std3.png} \label{fig:diastole_mode13_std3}
 }
 \caption{ End-diastole and end-systole variation represented by the shape model mode with the highest importance when used with all other features. The points approximately in line the middle of the septum are shown in black. }
 \label{fig:visualise_shapes}
 \end{center}
-
 		\end{figure}
-	
-		
-  
- 		
-		
-\section{Discussion}
-As expected, ejection fraction proved to correctly classify the cases on its own. The random forest algorithm (Fig. \ref{fig:random_forest_feature_importance__all_72__dia_sys}) gave ES endocardium volume slightly more importance than ejection fraction. This is not surprising as both measures are strongly correlated. Another feature that proved to be important was the variance in the thickness difference between ED and ES. The idea of reduced contraction in scarred areas of myocardium also fits with these results.
-When using only shape modes to build a random forest, Fig.     \ref{fig:random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys} shows that the first mode was the most important. The same was true for the thickness model. Figure \ref{fig:random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys} suggests that many of the first 15 modes are of relatively high importance. 
-However, it is worth noting that the importance of particular shape and thickness modes increased in importance when used along with the remaining features in Table \ref{table:featurelist} (e.g. shape mode 14 and thickness mode 7). This suggests that these modes provide different information to the ejection fraction and volumes measurements, and could represent an interesting avenue for future research.
-Figure \ref{fig:classification_error__5kfold_LOO__all_72_dia_sys} shows the classification error when all of the features in Table \ref{table:featurelist} were used, showing that the final random forest classification was an improvement on the use of standard clinical parameters such as ejection fraction.
 
+\section{Discussion}
+As expected, ejection fraction proved to correctly classify the cases on its own. The random forest algorithm (Fig. \ref{fig:random_forest_feature_importance__all_72__dia_sys}) gave ES endocardium volume slightly more importance than ejection fraction. This is not surprising as both measures are strongly correlated. Another feature that proved to be important was the variance in the thickness difference between ED and ES. The idea of reduced contraction in scarred areas of myocardium fits with these results.
+When using only shape modes to build a random forest, Fig.     \ref{fig:random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys} shows that the first mode was the most important. The same was true for the thickness model. Figure \ref{fig:random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys} suggests that many of the first 15 modes are of relatively high importance. However, it is worth noting that the importance of particular shape and thickness modes increased when used along with the remaining features in Table \ref{table:featurelist} (e.g. shape mode 14 and thickness mode 7). This suggests that these modes provide different information to the ejection fraction and volumes measurements, and could represent an interesting avenue for future research.
+Figure \ref{fig:classification_error__5kfold_LOO__all_72_dia_sys} shows the classification error when all of the features in Table \ref{table:featurelist} were used, showing that the final random forest classification was an improvement on the use of standard clinical parameters such as ejection fraction.
 \section{Conclusion}
-We used 72 features to classifying left ventricle shapes with a random forest. Features were chosen to quantify volume, sphericity, myocardium thickness statistics. The features also included parameters from statistical shape and thickness variation models. Our results suggest that these features provide extra information than standard clinical parameters, for classification. The best classification score was 92.5\% (error = 0.075). 
+We used 72 features to classifying left ventricle shapes with a random forest. Features were chosen to quantify volume, sphericity and myocardium thickness statistics. The features also included parameters from statistical shape and thickness variation models. Our results suggest that these features provide extra information than standard clinical parameters, for classification. The best classification score was 92.5\% (error = 0.075). 
 The statistical models modes were somewhat useful for classification, but there were many other features that were as important. Interesting observations about endocardial curvature and apical thickness detected by the shape model could be useful for further studies into remodelling. Shape and thickness variation from the remaining modes could be analysed and work could be done to investigate whether similar classification success could be achieved with a reduced number of features.
 \section{Acknowledgements}
 This work has been supported by the Engineering and Physical Sciences Research Council (EPSRC) and the Medical Research Council (MRC).
 % ---- Bibliography ----
 \bibliographystyle{splncs03}
 \bibliography{references}
-
 
 \end{document}
 
