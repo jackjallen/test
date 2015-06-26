@@ -120,10 +120,10 @@ Figure \ref{fig:Ejectionfractionhistograms} demonstrates the split between the e
 		\begin{figure}[]
 		
 \begin{center} 
-\subfigure[]{\includegraphics[width=0.26\textheight]{Ejection_fraction_histograms.eps}
+\subfigure[]{\includegraphics[height=0.2\textheight]{Ejection_fraction_histograms.eps}
  \label{fig:Ejectionfractionhistograms}}
 \!
-\subfigure[]{\includegraphics[width=0.26\textheight]{sensitivity_versus_specificity_EF___leave_one_out.eps} \label{fig:sensitivity_versus_specificity_EF}}
+\subfigure[]{\includegraphics[width = 0.35\textwidth, ]{sensitivity_versus_specificity_EF___leave_one_out.eps} \label{fig:sensitivity_versus_specificity_EF}}
 \caption{ \ref{fig:Ejectionfractionhistograms} Comparing the ejection fractions of the DETERMINE and MESA cases \ref{fig:sensitivity_versus_specificity_EF} Cross-validated (leave-one-out) ejection fraction specificity and sensitivity. Yellow stars mark the sensitivity and specificity values for the optimum accuracy of 87\%.}
 \label{fig:EFs}
 \end{center}    
@@ -133,7 +133,7 @@ Figure \ref{fig:Ejectionfractionhistograms} demonstrates the split between the e
 		\begin{figure}[]
 		\begin{center}
 		
-		\includegraphics[height = 0.32\textwidth]{random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys.eps}
+		\includegraphics[height = 0.34\textwidth]{100_mode_importances_shape_and_thickness.eps}
 	\caption{Importance of the first 100 modes of variation of the two models.}	
 \label{fig:random_forest_feature_importance__100_shape_eigenvalues__and_100_thickness_modes_dia_sys}			\end{center}
 		\end{figure}
@@ -144,7 +144,7 @@ Figure \ref{fig:Ejectionfractionhistograms} demonstrates the split between the e
 		\begin{figure}[]
 		\begin{center}
 		
-		\includegraphics[height = 0.32\textwidth]{random_forest_feature_importance__all_72_line_plot__dia_sys.eps}
+		\includegraphics[height = 0.34\textwidth]{random_forest_feature_importance__all_72_line_plot__dia_sys.eps}
 		
 \caption{Random forest importance of all the features specified in Table \ref{table:featurelist}. The colours group the features according to Table \ref{table:featurelist}. (yellow = shape model parameters, magenta = global thickness statistics, cyan = segment thickness variances, red = segment thickness means, blue circles = volumes, blue triangles = log volumes, black = thickness model parameters).}
 \label{fig:random_forest_feature_importance__all_72__dia_sys}		\end{center}
@@ -154,7 +154,7 @@ Figure \ref{fig:Ejectionfractionhistograms} demonstrates the split between the e
 	\begin{center}
 	
 
-		\includegraphics[height = 0.32\textwidth]{classification_error__5kfold_LOO__all_72_dia_sys.eps}
+		\includegraphics[height = 0.385\textwidth]{classification_error__5kfold_LOO__all_72_dia_sys.eps}
 \caption{Cross-validated (5-fold and leave-one-out) classification error for the random forest built using all the features listed in Table \ref{table:featurelist}}.	
 \label{fig:classification_error__5kfold_LOO__all_72_dia_sys}			\end{center}
 		\end{figure}
@@ -162,7 +162,7 @@ Figure \ref{fig:Ejectionfractionhistograms} demonstrates the split between the e
 	\begin{figure}[]	
 	\!		
 \begin{center}   
-\subfigure[end-diastole mode 13: -3 $\mathrm{std}$, mean, +3$\mathrm{std}$]
+\subfigure[end-diastole mode 13: -3 $\mathrm{std}$, mean, +3$\mathrm{std}$.]
 {
 \includegraphics[width=0.13\textwidth]{diastole_mode13_std-3.png} 
 
@@ -170,20 +170,32 @@ Figure \ref{fig:Ejectionfractionhistograms} demonstrates the split between the e
 {diastole_mean.png}
 
 \includegraphics[width=0.13\textwidth]
-{diastole_mode13_std3.png} \label{fig:diastole_mode1_std3}
+{diastole_mode13_std3.png} \label{fig:ED_shape_mode_vis}
 }
 \qquad
-\subfigure[end-systole mode 13: -3$\mathrm{std}$, mean, +3$\mathrm{std}$]{
+\subfigure[end-systole mode 13: -3$\mathrm{std}$, mean, +3$\mathrm{std}$.]{
 \includegraphics[width=0.13\textwidth]
 {systole_mode13_std-3.png}
-\label{fig:diastole_mode14_std-3}
+\label{fig:ES_shape_mode_vis}
 
-\includegraphics[width=0.13\textwidth]{systole_mean.png} \label{fig:systole_mean}
+\includegraphics[width=0.13\textwidth]{systole_mean.png} 
 
 \includegraphics[width=0.13\textwidth]
-{systole_mode13_std3.png} \label{fig:diastole_mode13_std3}
+{systole_mode13_std3.png} 
 }
-\caption{ End-diastole and end-systole variation represented by the shape model mode with the highest importance when used with all other features. The points approximately in line the middle of the septum are shown in black. }
+%\subfigure[end-diastole thickness mode 7: -3$\mathrm{std}$, mean, +3$\mathrm{std}$]{
+%\includegraphics[width=0.15\textwidth]
+%{ED_-3std_thickness.png}
+
+%\includegraphics[width=0.15\textwidth]{ED_mean_thickness.png} \
+
+%\includegraphics[width=0.15\textwidth]
+%{ED_+3std_thickness.png}
+%\label{fig:ED_thickness_mode_vis}
+
+%\caption{ Statisitical model variation for shape (\ref{fig:ED_shape_mode_vis}, \ref{fig:ES_shape_mode_vis})  and thickness (\ref{fig:ED_thickness_mode_vis},\ref{fig:ES_shape_mode_vis}) model modes with the highest importance when used with all other features. The points approximately in line the middle of the septum are shown in black in (\ref{fig:ED_shape_mode_vis}, \ref{fig:ES_shape_mode_vis}). }
+
+\caption{ Variation for the statistical shape model mode with the highest importance when used with all other features. The points approximately in line with the middle of the septum are shown in black in. }
 \label{fig:visualise_shapes}
 \end{center}
 		\end{figure}
