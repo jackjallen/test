@@ -9,7 +9,7 @@
 \graphicspath{{./figures/}}
 \begin{document}
 
-\title{Myocardial infarction detection from Left Ventricular shapes using a Random Forest.}
+\title{Myocardial Infarction Detection from Left Ventricular Shapes using a Random Forest.}
 
 \author{*}
 
@@ -25,16 +25,9 @@ Understanding myocardial remodelling, and developing tools for its accurate quan
 \end{abstract}
 %
 \section{Introduction}
-The damage resulting from myocardial infarction can cause the heart to remodel, which can have a negative effect on its function \cite{Sutton2000}. Remodelling of the left ventricle (LV) is particularly significant because of its potential life-threatening effects, and is currently characterised through global metrics, such as blood pool volume or LV ejection fraction. In particular, myocardial infarction can cause thinning and a decrease in thickness change over the cardiac cycle, in the area of the scar, while hypertrophy can occur in other areas as they adapt to compensate \cite{Sutton2000}, and these are features not captured by current clinical metrics. 
+The damage resulting from myocardial infarction can cause the heart to remodel, which can have a negative effect on its function \cite{Sutton2000}. Remodelling of the left ventricle (LV) is particularly significant because of its potential life-threatening effects, and is currently characterised through global metrics, such as blood pool volume or LV ejection fraction. In particular, myocardial infarction can cause thinning and a decrease in thickness change over the cardiac cycle, in the area of the scar, while hypertrophy can occur in other areas as they adapt to compensate \cite{Sutton2000}, and these are features not captured by current clinical metrics.
 
- 
-
-Shape and cardiac remodelling can also be characterised through statistical shape models, also known as computational statistical atlases \cite{Cootes1992,Young2009}. Atlas-based metrics have the potential to increase  specificity and sensitivity, and to improve our understanding of shape changes in development and pathology \cite{Lewandowski2012,Lorenz2006}. 
-
-%These metrics could help the development of novel %ways to quantify risk and patient-specific %treatment options.
-
-
-In this work we explore this hypothesis, generating a large collection of LV shape metrics, and analysing its joint classification performance through Breiman's decision tree ensembles, known as \emph{random forests} \cite{Breiman2001}, a technique that has been shown to provide excellent classification results when many features are available. The objective is to provide metrics that capture the detailed anatomical changes caused by infarction.
+Shape and cardiac remodelling can also be characterised through statistical shape models, also known as computational statistical atlases \cite{Cootes1992,Young2009}. Atlas-based metrics have the potential to increase  specificity and sensitivity, and to improve our understanding of shape changes in development and pathology \cite{Lewandowski2012,Lorenz2006}. In this work we explore this hypothesis, generating a large collection of LV shape metrics, and analysing its joint classification performance through Breiman's decision tree ensembles, known as \emph{random forests} \cite{Breiman2001}, a technique that has been shown to provide excellent classification results when many features are available. The objective is to provide metrics that capture the detailed anatomical changes caused by infarction.
 
 
 \section{Materials and Methods}
@@ -46,7 +39,7 @@ A dataset of 400 3D left ventricle shapes was provided by the organisers of the 
 	We calculated a combination of standard clinical features and novel atlas-based metrics, as described next (full list in Table \ref{table:featurelist}). All metrics were computed using \emph{\mbox{MATLAB}} and \emph{The Visualization Tookit} (VTK) \cite{Schroeder2006}.
 	\subsubsection{Volumes and ejection fraction.}
 We calculated the volumes contained by the epicardium and endocardium surfaces, both at ED and ES. For this purpose, we closed each endocardial and epicardial surface by adding a node at the centroid of the boundary of the base and connecting this new node by a fan of triangles to the boundary. Once the surfaces were closed (and consistent normals pointing outwards were assigned to each triangle) we computed the volume within each surface, making use of the divergence theorem and integrating the flow through the surfaces \cite{Millan2007}. These volumes were used to compute ejection fractions. 
-\subsubsection{Sphericity.}Remodelling has been shown to produce increased sphericity of the left ventricle \cite{Sutton2000}. We  computed the sphericity \cite{Wadell1933} of the endocardium and epicardium surfaces at ED and ES using Eq. \ref{eq:sphericity}, where V and A are the volume and surface area of a 3D shape, respectively. Surface areas were calculated by summing the areas of all the triangles in each mesh.
+\subsubsection{Sphericity.}Remodelling has been shown to produce increased sphericity of the left ventricle \cite{Sutton2000}. We  computed the sphericity \cite{Wadell1933} of the endocardium and epicardium surfaces at ED and ES using Eq. \ref{eq:sphericity}, where V and A are the volume and surface area of a 3D shape, respectively.
 
 \begin{equation} \label{eq:sphericity}
  Sphericity = \cfrac{\pi^{1/3}(6V)^{2/3}}{A} 
@@ -54,7 +47,7 @@ We calculated the volumes contained by the epicardium and endocardium surfaces, 
 
 \subsubsection{Atlas-based shape metrics.} 
 
-A statistical shape model, represented by a point distribution model, was built in a similar way to previous publications \cite{VanAssen2006,Lotjonen2004}. The 200 training cases were used to build the model. A mean shape $\mathbf{\bar{x}}$ was computed by means of Procrustes iterations, as is described in \cite{Gower1975}, but without reflection or scaling components. Principal component analysis (PCA) was then applied to the training shapes, to find a matrix of eigenvectors $\Phi$, with corresponding eigenvalues, describing geometric modes of variation across the shapes. 
+A statistical shape model, represented by a point distribution model, was built in a similar way to previous publications \cite{VanAssen2006,Lotjonen2004}. The 200 training cases were used to build the model. A mean shape $\mathbf{\bar{x}}$ was computed by means of Procrustes iterations, but without reflection or scaling components. Principal component analysis (PCA) was then applied to the training shapes, to find a matrix of eigenvectors $\Phi$, with corresponding eigenvalues, describing geometric modes of variation across the shapes. 
 After ranking the eigenvectors in descending order according to their corresponding eigenvalues, the first 100 were used in Eq. \ref{eq:shape_model}, to obtain atlas-based shape metrics $\textbf{b} $ for each shape vector $ \textbf{x} $. 
 
 \begin{equation} \label{eq:shape_model}
@@ -148,9 +141,9 @@ This result was achieved after the selection of atlas-based features guided by t
 \subfigure[]{\includegraphics[width = 0.4\textwidth]{Ejection_fraction_histograms.png}
  \label{fig:Ejectionfractionhistograms}}
 \subfigure[]{
-\includegraphics[width = 0.45\textwidth ]{Ejection_fraction_sensitivity_versus_specificity__leave_one_out.eps} \label{fig:sensitivity_versus_specificity_EF}}
+\includegraphics[width = 0.4\textwidth ]{Ejection_fraction_sensitivity_versus_1minusspecificity.eps} \label{fig:Ejection_fraction_sensitivity_versus_1minusspecificity}}
 
-\caption{ \ref{fig:Ejectionfractionhistograms} Comparing the ejection fractions of the DETERMINE and MESA cases \ref{fig:sensitivity_versus_specificity_EF} Ejection fraction Receiver Operator Characteristic (ROC) curve. Yellow stars mark the two sets of sensitivity and specificity values that correspond to the optimum accuracy of 87\%.}
+\caption{ \ref{fig:Ejectionfractionhistograms} Comparing the ejection fractions of the DETERMINE and MESA cases \ref{fig:Ejection_fraction_sensitivity_versus_1minusspecificity} Ejection fraction ROC curve. Red stars mark the two sets of sensitivity and specificity values that correspond to the optimum accuracy of 87\%.}
 \label{fig:EFs}
   
 \end{center}
@@ -224,7 +217,9 @@ The selection of atlas-based metrics was performed in a preliminary stage (see F
 
 
 \section{Acknowledgements}
-This work has been supported by the Engineering and Physical Sciences Research Council (EPSRC), the Medical Research Council (MRC), the Wellcome trust and the Royal society.
+Acknowledgements removed to comply with anonymity requirements.
+
+%This work has been supported by the Engineering and Physical Sciences Research Council (EPSRC), the Medical Research Council (MRC), the Wellcome trust and the Royal society.
 % ---- Bibliography ----
 \bibliographystyle{splncs03}
 \bibliography{references}
